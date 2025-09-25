@@ -18,6 +18,14 @@ const createMockSupabaseClient = () => ({
       console.warn('⚠️ Supabase not configured - authentication disabled');
       return Promise.resolve({ error: new Error('Supabase not configured. Using local storage.') });
     },
+    signInWithPassword: () => {
+      console.warn('⚠️ Supabase not configured - using local storage');
+      return Promise.resolve({ error: new Error('Supabase not configured. Using local storage.') });
+    },
+    signUp: () => {
+      console.warn('⚠️ Supabase not configured - using local storage');
+      return Promise.resolve({ error: new Error('Supabase not configured. Using local storage.') });
+    },
     signOut: () => Promise.resolve({ error: null })
   },
   from: () => ({
