@@ -16,8 +16,6 @@ interface SidebarProps {
   onToggleTheme: () => void;
   onToggleSidebar: () => void;
   isOpen: boolean;
-  onToggleSidebar: () => void;
-  isOpen: boolean;
 }
 
 export default function Sidebar({
