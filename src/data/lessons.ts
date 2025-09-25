@@ -2366,7 +2366,7 @@ export default function App() {
     ]
   }
 ];
-        },
+        
         task: 'Convert the useState-based counter to use useReducer for managing both count and step values.',
         hints: [
           {
