@@ -103,9 +103,9 @@ npm run build
 ## ✅ Roadmap  
 
 - [ ] Add more lessons (Hooks, Context API, Lifecycle)  
-- [ ] Code editor with live preview  
+- [ ] ~~Code editor with live preview!!~~  
 - [ ] User accounts and saved progress  
-- [ ] Quizzes and challenges  
+- [ ] ~~Quizzes and challenges~~  
 
 ---
 
@@ -117,4 +117,4 @@ Contributions are welcome! Please open an issue or submit a pull request if you�
 
 ## 📜 License  
 
-MIT License © 2025 [Your Name]  
+MIT License © 2025 [Himanshu Rai]  
