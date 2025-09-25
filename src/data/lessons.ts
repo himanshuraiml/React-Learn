@@ -100,6 +100,46 @@ export const achievements: Achievement[] = [
       type: 'lesson-complete',
       target: 'custom-hooks'
     }
+  },
+  {
+    id: 'reducer-master',
+    title: 'Reducer Master',
+    description: 'Mastered complex state with useReducer!',
+    icon: '⚙️',
+    condition: {
+      type: 'lesson-complete',
+      target: 'use-reducer'
+    }
+  },
+  {
+    id: 'context-champion',
+    title: 'Context Champion',
+    description: 'Conquered global state with Context API!',
+    icon: '🌍',
+    condition: {
+      type: 'lesson-complete',
+      target: 'context-basics'
+    }
+  },
+  {
+    id: 'performance-optimizer',
+    title: 'Performance Optimizer',
+    description: 'Optimized React performance with useMemo and useCallback!',
+    icon: '🚀',
+    condition: {
+      type: 'lesson-complete',
+      target: 'performance-hooks'
+    }
+  },
+  {
+    id: 'lifecycle-master',
+    title: 'Lifecycle Master',
+    description: 'Mastered React component lifecycle!',
+    icon: '🔄',
+    condition: {
+      type: 'lesson-complete',
+      target: 'lifecycle-patterns'
+    }
   }
 ];
 
@@ -1298,5 +1338,1066 @@ export default function App() {
         achievementIds: ['hook-architect']
       }
     ]
+  },
+  {
+    id: 'advanced-hooks',
+    title: 'Advanced Hooks',
+    description: 'Master React\'s powerful built-in hooks',
+    icon: '🪝',
+    subLessons: [
+      {
+        id: 'use-reducer',
+        title: 'useReducer Hook',
+        description: 'Manage complex state with useReducer',
+        explanation: 'useReducer is like having a super-powered remote control for complex state! While useState is perfect for simple state like a light switch (on/off), useReducer is like the control panel for a spaceship with many interconnected systems. It\'s especially useful when your state has multiple sub-values or when the next state depends on the previous one. Think of it as useState\'s big brother - it can handle more complex scenarios like forms with multiple fields, shopping carts, or any state that needs to be updated in multiple different ways. The reducer function is like a rulebook that says "when this action happens, update the state this way."',
+        concepts: [
+          'When to use useReducer vs useState',
+          'Reducer function patterns',
+          'Action objects and types',
+          'Complex state management',
+          'State transitions'
+        ],
+        files: {
+          'App.tsx': `import { useState } from 'react';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [step, setStep] = useState(1);
+  
+  return (
+    <div>
+      <h1>Counter with Step</h1>
+      <p>Count: {count}</p>
+      <p>Step: {step}</p>
+      
+      <div>
+        <button onClick={() => setCount(count + step)}>+{step}</button>
+        <button onClick={() => setCount(count - step)}>-{step}</button>
+        <button onClick={() => setCount(0)}>Reset</button>
+      </div>
+      
+      <div>
+        <button onClick={() => setStep(step + 1)}>Increase Step</button>
+        <button onClick={() => setStep(Math.max(1, step - 1))}>Decrease Step</button>
+      </div>
+    </div>
+  );
+}`
+        },
+        solutionFiles: {
+          'App.tsx': `import { useReducer } from 'react';
+
+// State interface
+interface CounterState {
+  count: number;
+  step: number;
+}
+
+// Action types
+type CounterAction =
+  | { type: 'INCREMENT' }
+  | { type: 'DECREMENT' }
+  | { type: 'RESET' }
+  | { type: 'SET_STEP'; payload: number };
+
+// Reducer function - the "rulebook" for state updates
+function counterReducer(state: CounterState, action: CounterAction): CounterState {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { ...state, count: state.count + state.step };
+    case 'DECREMENT':
+      return { ...state, count: state.count - state.step };
+    case 'RESET':
+      return { ...state, count: 0 };
+    case 'SET_STEP':
+      return { ...state, step: Math.max(1, action.payload) };
+    default:
+      return state;
+  }
+}
+
+// Initial state
+const initialState: CounterState = {
+  count: 0,
+  step: 1
+};
+
+export default function App() {
+  const [state, dispatch] = useReducer(counterReducer, initialState);
+  
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1>Advanced Counter with useReducer</h1>
+      
+      <div style={{ fontSize: '18px', marginBottom: '20px' }}>
+        <p><strong>Count:</strong> {state.count}</p>
+        <p><strong>Step:</strong> {state.step}</p>
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <button 
+          onClick={() => dispatch({ type: 'INCREMENT' })}
+          style={{ marginRight: '10px', padding: '8px 16px', backgroundColor: '#22c55e', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          +{state.step}
+        </button>
+        <button 
+          onClick={() => dispatch({ type: 'DECREMENT' })}
+          style={{ marginRight: '10px', padding: '8px 16px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          -{state.step}
+        </button>
+        <button 
+          onClick={() => dispatch({ type: 'RESET' })}
+          style={{ padding: '8px 16px', backgroundColor: '#6b7280', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Reset
+        </button>
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <h3>Step Controls:</h3>
+        <button 
+          onClick={() => dispatch({ type: 'SET_STEP', payload: state.step + 1 })}
+          style={{ marginRight: '10px', padding: '8px 16px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Increase Step
+        </button>
+        <button 
+          onClick={() => dispatch({ type: 'SET_STEP', payload: state.step - 1 })}
+          style={{ padding: '8px 16px', backgroundColor: '#f59e0b', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          Decrease Step
+        </button>
+      </div>
+      
+      <div style={{ backgroundColor: '#f3f4f6', padding: '15px', borderRadius: '8px', marginTop: '20px' }}>
+        <h4>🧠 What's happening:</h4>
+        <ul style={{ fontSize: '14px' }}>
+          <li><strong>useReducer</strong> manages complex state with multiple values</li>
+          <li><strong>dispatch</strong> sends actions to the reducer</li>
+          <li><strong>Reducer</strong> determines how state changes based on actions</li>
+          <li><strong>Actions</strong> describe what happened (INCREMENT, RESET, etc.)</li>
+        </ul>
+      </div>
+    </div>
+  );
+}`
+        },
+        task: 'Convert the useState-based counter to use useReducer for managing both count and step values.',
+        hints: [
+          {
+            id: 'reducer-hint-1',
+            text: 'Define action types: INCREMENT, DECREMENT, RESET, SET_STEP',
+            order: 1
+          },
+          {
+            id: 'reducer-hint-2',
+            text: 'Create a reducer function that handles all these action types',
+            order: 2
+          },
+          {
+            id: 'reducer-hint-3',
+            text: 'Use dispatch({ type: "ACTION_NAME" }) to trigger state updates',
+            order: 3
+          }
+        ],
+        quiz: {
+          id: 'reducer-quiz-1',
+          question: 'When should you use useReducer instead of useState?',
+          type: 'multiple-choice',
+          options: [
+            'When you have simple boolean state',
+            'When you have complex state with multiple sub-values',
+            'When you need to store strings',
+            'When you want to make HTTP requests'
+          ],
+          correctAnswer: 1,
+          explanation: 'useReducer is ideal for complex state logic with multiple sub-values or when the next state depends on the previous one. It provides more predictable state updates through a reducer function.'
+        },
+        achievementIds: ['reducer-master']
+      },
+      {
+        id: 'performance-hooks',
+        title: 'Performance Hooks',
+        description: 'Optimize with useMemo and useCallback',
+        explanation: 'useMemo and useCallback are like smart caching systems for your React app! Imagine your app is a restaurant kitchen - useMemo is like preparing ingredients in advance and storing them in the fridge so you don\'t have to chop vegetables every single time someone orders. useCallback is like training your chefs to remember their specialized techniques so they don\'t have to relearn them for every dish. These hooks prevent unnecessary recalculations and function recreations, making your app faster and more efficient. However, like any optimization, use them wisely - not every calculation needs caching!',
+        concepts: [
+          'When to use useMemo',
+          'When to use useCallback',
+          'Dependency arrays',
+          'Avoiding unnecessary re-renders',
+          'Performance optimization patterns'
+        ],
+        files: {
+          'App.tsx': `import { useState } from 'react';
+
+function ExpensiveCalculation({ number }) {
+  // This function runs on every render
+  const calculate = () => {
+    console.log('Calculating...');
+    let result = 0;
+    for (let i = 0; i < 1000000; i++) {
+      result += number;
+    }
+    return result;
+  };
+  
+  return <div>Result: {calculate()}</div>;
+}
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [input, setInput] = useState(5);
+  
+  return (
+    <div>
+      <h1>Performance Demo</h1>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      
+      <div>
+        <input 
+          type="number" 
+          value={input} 
+          onChange={(e) => setInput(Number(e.target.value))} 
+        />
+        <ExpensiveCalculation number={input} />
+      </div>
+    </div>
+  );
+}`
+        },
+        solutionFiles: {
+          'App.tsx': `import { useState, useMemo, useCallback } from 'react';
+
+// Child component that receives a callback
+function Counter({ onIncrement, count }) {
+  console.log('Counter component rendered');
+  
+  return (
+    <div style={{ border: '2px solid #e5e7eb', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+      <h3>Counter Component</h3>
+      <p>Count: {count}</p>
+      <button 
+        onClick={onIncrement}
+        style={{ padding: '8px 16px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px' }}
+      >
+        Increment
+      </button>
+    </div>
+  );
+}
+
+// Component with expensive calculation
+function ExpensiveCalculation({ number }) {
+  console.log('ExpensiveCalculation component rendered');
+  
+  // useMemo prevents recalculation unless 'number' changes
+  const expensiveValue = useMemo(() => {
+    console.log('🔥 Performing expensive calculation...');
+    let result = 0;
+    for (let i = 0; i < 1000000; i++) {
+      result += number;
+    }
+    return result;
+  }, [number]); // Only recalculate when number changes
+  
+  // useMemo for formatting (lighter calculation)
+  const formattedValue = useMemo(() => {
+    console.log('📊 Formatting value...');
+    return new Intl.NumberFormat().format(expensiveValue);
+  }, [expensiveValue]);
+  
+  return (
+    <div style={{ border: '2px solid #10b981', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+      <h3>Expensive Calculation</h3>
+      <p><strong>Input:</strong> {number}</p>
+      <p><strong>Result:</strong> {formattedValue}</p>
+    </div>
+  );
+}
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [input, setInput] = useState(5);
+  const [otherState, setOtherState] = useState('');
+  
+  // useCallback prevents function recreation unless count changes
+  const handleIncrement = useCallback(() => {
+    console.log('🚀 Increment function called');
+    setCount(prev => prev + 1);
+  }, []); // Empty dependency array since we use functional update
+  
+  // Another callback that depends on count
+  const handleReset = useCallback(() => {
+    console.log('🔄 Reset function called');
+    setCount(0);
+  }, []); // Empty dependency array since we set to constant value
+  
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1>🚀 Performance Hooks Demo</h1>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <p><strong>Main count:</strong> {count}</p>
+        <button 
+          onClick={handleReset}
+          style={{ padding: '8px 16px', backgroundColor: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', marginRight: '10px' }}
+        >
+          Reset Count
+        </button>
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <label>Other state (doesn't affect calculations): </label>
+        <input 
+          type="text"
+          value={otherState} 
+          onChange={(e) => setOtherState(e.target.value)}
+          placeholder="Type something..."
+          style={{ padding: '5px', marginLeft: '10px' }}
+        />
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <label>Number for calculation: </label>
+        <input 
+          type="number" 
+          value={input} 
+          onChange={(e) => setInput(Number(e.target.value))}
+          style={{ padding: '5px', marginLeft: '10px', width: '100px' }}
+        />
+      </div>
+      
+      <Counter onIncrement={handleIncrement} count={count} />
+      <ExpensiveCalculation number={input} />
+      
+      <div style={{ backgroundColor: '#f3f4f6', padding: '15px', borderRadius: '8px', marginTop: '20px' }}>
+        <h4>🔍 Performance Optimization:</h4>
+        <ul style={{ fontSize: '14px' }}>
+          <li><strong>useMemo:</strong> Caches expensive calculations until dependencies change</li>
+          <li><strong>useCallback:</strong> Prevents function recreation on every render</li>
+          <li><strong>Check console:</strong> See when calculations actually run</li>
+          <li><strong>Try:</strong> Change "other state" - calculations won't re-run!</li>
+        </ul>
+      </div>
+    </div>
+  );
+}`
+        },
+        task: 'Add useMemo to cache expensive calculations and useCallback to optimize event handlers.',
+        hints: [
+          {
+            id: 'perf-hint-1',
+            text: 'Wrap expensive calculations with useMemo and provide dependencies',
+            order: 1
+          },
+          {
+            id: 'perf-hint-2',
+            text: 'Use useCallback for event handlers that are passed to child components',
+            order: 2
+          },
+          {
+            id: 'perf-hint-3',
+            text: 'Check the browser console to see when calculations run',
+            order: 3
+          }
+        ],
+        quiz: {
+          id: 'performance-quiz-1',
+          question: 'What does useMemo help with?',
+          type: 'multiple-choice',
+          options: [
+            'Creating new functions',
+            'Caching expensive calculations',
+            'Managing component state',
+            'Handling side effects'
+          ],
+          correctAnswer: 1,
+          explanation: 'useMemo caches the result of expensive calculations and only recalculates when its dependencies change, improving performance by avoiding unnecessary work.'
+        },
+        achievementIds: ['performance-optimizer']
+      }
+    ]
+  },
+  {
+    id: 'context-api',
+    title: 'Context API',
+    description: 'Share data across components without prop drilling',
+    icon: '🌍',
+    subLessons: [
+      {
+        id: 'context-basics',
+        title: 'React Context',
+        description: 'Global state management with Context API',
+        explanation: 'React Context is like a family group chat that everyone can access! Instead of passing messages from parent to child to grandchild (prop drilling), Context lets you create a "broadcast channel" that any component in your app can tune into. It\'s perfect for sharing data that many components need, like user authentication status, theme preferences, or language settings. Think of it as creating a shared storage locker that all your components have the key to - no more passing props through components that don\'t even use them!',
+        concepts: [
+          'What is Context API',
+          'Creating Context with createContext',
+          'Providing values with Provider',
+          'Consuming context with useContext',
+          'When to use Context vs props'
+        ],
+        files: {
+          'App.tsx': `function Header({ user, theme, onThemeToggle }) {
+  return (
+    <header style={{ backgroundColor: theme === 'dark' ? '#333' : '#f0f0f0', padding: '1rem' }}>
+      <h1>My App</h1>
+      <div>
+        <span>Welcome, {user.name}!</span>
+        <button onClick={onThemeToggle}>
+          Switch to {theme === 'dark' ? 'light' : 'dark'} theme
+        </button>
+      </div>
+    </header>
+  );
+}
+
+function Sidebar({ user, theme }) {
+  return (
+    <div style={{ backgroundColor: theme === 'dark' ? '#222' : '#e0e0e0', padding: '1rem', minHeight: '300px' }}>
+      <h3>Sidebar</h3>
+      <p>User: {user.name}</p>
+      <p>Theme: {theme}</p>
+    </div>
+  );
+}
+
+function Content({ user, theme }) {
+  return (
+    <main style={{ backgroundColor: theme === 'dark' ? '#111' : '#fff', color: theme === 'dark' ? '#fff' : '#000', padding: '1rem', flex: 1 }}>
+      <h2>Main Content</h2>
+      <p>Hello {user.name}, you're using {theme} theme!</p>
+    </main>
+  );
+}
+
+export default function App() {
+  const user = { name: 'Alice', role: 'admin' };
+  const [theme, setTheme] = useState('light');
+  
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+  
+  return (
+    <div>
+      <Header user={user} theme={theme} onThemeToggle={toggleTheme} />
+      <div style={{ display: 'flex' }}>
+        <Sidebar user={user} theme={theme} />
+        <Content user={user} theme={theme} />
+      </div>
+    </div>
+  );
+}`
+        },
+        solutionFiles: {
+          'App.tsx': `import { createContext, useContext, useState } from 'react';
+
+// Create contexts
+const UserContext = createContext();
+const ThemeContext = createContext();
+
+// Custom hooks for easier context consumption
+function useUser() {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within UserProvider');
+  }
+  return context;
+}
+
+function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
+  return context;
+}
+
+// Header component - no more prop drilling!
+function Header() {
+  const user = useUser();
+  const { theme, toggleTheme } = useTheme();
+  
+  return (
+    <header style={{ 
+      backgroundColor: theme === 'dark' ? '#333' : '#f0f0f0', 
+      color: theme === 'dark' ? '#fff' : '#000',
+      padding: '1rem',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }}>
+      <h1>My App with Context</h1>
+      <div>
+        <span style={{ marginRight: '15px' }}>Welcome, {user.name}! (Role: {user.role})</span>
+        <button 
+          onClick={toggleTheme}
+          style={{ 
+            padding: '8px 16px', 
+            backgroundColor: theme === 'dark' ? '#555' : '#ddd',
+            color: theme === 'dark' ? '#fff' : '#000',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Switch to {theme === 'dark' ? 'light' : 'dark'} theme
+        </button>
+      </div>
+    </header>
+  );
+}
+
+// Sidebar component - clean and simple
+function Sidebar() {
+  const user = useUser();
+  const { theme } = useTheme();
+  
+  return (
+    <div style={{ 
+      backgroundColor: theme === 'dark' ? '#222' : '#e0e0e0',
+      color: theme === 'dark' ? '#fff' : '#000',
+      padding: '1rem', 
+      minHeight: '400px',
+      width: '200px'
+    }}>
+      <h3>Navigation</h3>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        <li style={{ marginBottom: '10px' }}>
+          <a href="#" style={{ color: theme === 'dark' ? '#88c999' : '#2563eb' }}>Dashboard</a>
+        </li>
+        <li style={{ marginBottom: '10px' }}>
+          <a href="#" style={{ color: theme === 'dark' ? '#88c999' : '#2563eb' }}>Profile</a>
+        </li>
+        {user.role === 'admin' && (
+          <li style={{ marginBottom: '10px' }}>
+            <a href="#" style={{ color: theme === 'dark' ? '#fbbf24' : '#d97706' }}>Admin Panel</a>
+          </li>
+        )}
+      </ul>
+      
+      <div style={{ marginTop: '20px', padding: '10px', backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9', borderRadius: '4px' }}>
+        <small>
+          <strong>User:</strong> {user.name}<br/>
+          <strong>Theme:</strong> {theme}
+        </small>
+      </div>
+    </div>
+  );
+}
+
+// Content component - also clean
+function Content() {
+  const user = useUser();
+  const { theme } = useTheme();
+  
+  return (
+    <main style={{ 
+      backgroundColor: theme === 'dark' ? '#111' : '#fff', 
+      color: theme === 'dark' ? '#fff' : '#000', 
+      padding: '2rem', 
+      flex: 1
+    }}>
+      <h2>Main Content Area</h2>
+      <p>Hello <strong>{user.name}</strong>, welcome to your personalized dashboard!</p>
+      <p>You're currently using the <strong>{theme}</strong> theme.</p>
+      
+      {user.role === 'admin' && (
+        <div style={{ 
+          marginTop: '20px', 
+          padding: '15px', 
+          backgroundColor: theme === 'dark' ? '#1f2937' : '#fef3c7',
+          border: '1px solid ' + (theme === 'dark' ? '#374151' : '#fbbf24'),
+          borderRadius: '8px'
+        }}>
+          <h3>🔐 Admin Section</h3>
+          <p>You have administrator privileges and can access special features.</p>
+        </div>
+      )}
+      
+      <div style={{ 
+        marginTop: '30px', 
+        padding: '15px', 
+        backgroundColor: theme === 'dark' ? '#1e3a8a' : '#dbeafe',
+        borderRadius: '8px'
+      }}>
+        <h4>🎯 Benefits of Context:</h4>
+        <ul>
+          <li>No more prop drilling through intermediate components</li>
+          <li>Clean and readable component interfaces</li>
+          <li>Easy to share global state (user info, theme, etc.)</li>
+          <li>Better maintainability and less code duplication</li>
+        </ul>
+      </div>
+    </main>
+  );
+}
+
+export default function App() {
+  // App-level state
+  const [user] = useState({ name: 'Alice', role: 'admin' });
+  const [theme, setTheme] = useState('light');
+  
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+  
+  return (
+    <UserContext.Provider value={user}>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <div style={{ fontFamily: 'Arial, sans-serif' }}>
+          <Header />
+          <div style={{ display: 'flex', minHeight: '500px' }}>
+            <Sidebar />
+            <Content />
+          </div>
+        </div>
+      </ThemeContext.Provider>
+    </UserContext.Provider>
+  );
+}`
+        },
+        task: 'Convert the prop-drilling example to use React Context for user and theme data.',
+        hints: [
+          {
+            id: 'context-hint-1',
+            text: 'Create contexts using createContext() for user and theme data',
+            order: 1
+          },
+          {
+            id: 'context-hint-2',
+            text: 'Wrap your app with Provider components and pass values',
+            order: 2
+          },
+          {
+            id: 'context-hint-3',
+            text: 'Use useContext() in components to access the context values',
+            order: 3
+          }
+        ],
+        quiz: {
+          id: 'context-quiz-1',
+          question: 'What problem does React Context solve?',
+          type: 'multiple-choice',
+          options: [
+            'It speeds up component rendering',
+            'It prevents prop drilling',
+            'It handles HTTP requests',
+            'It manages component lifecycle'
+          ],
+          correctAnswer: 1,
+          explanation: 'React Context solves the prop drilling problem by allowing you to share data across components without passing props through intermediate components that don\'t need them.'
+        },
+        achievementIds: ['context-champion']
+      }
+    ]
+  },
+  {
+    id: 'lifecycle',
+    title: 'Component Lifecycle',
+    description: 'Master component lifecycle with hooks',
+    icon: '🔄',
+    subLessons: [
+      {
+        id: 'lifecycle-patterns',
+        title: 'Lifecycle Patterns',
+        description: 'Component mounting, updating, and cleanup',
+        explanation: 'Component lifecycle in React is like the life stages of a butterfly! Every React component goes through phases: mounting (being born), updating (growing and changing), and unmounting (cleanup time). With hooks, we use useEffect to handle these lifecycle events. It\'s like having different instruction manuals for "when the component first appears," "when something changes," and "when it\'s time to clean up." Understanding these patterns helps you manage data fetching, subscriptions, timers, and cleanup properly, preventing memory leaks and bugs.',
+        concepts: [
+          'Component lifecycle phases',
+          'useEffect for mounting',
+          'useEffect for updates',
+          'Cleanup with return functions',
+          'Dependency arrays and lifecycle'
+        ],
+        files: {
+          'App.tsx': `import { useState } from 'react';
+
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+  
+  // This should start a timer when component mounts
+  // and clean it up when component unmounts
+  
+  return (
+    <div>
+      <h3>Timer: {seconds} seconds</h3>
+    </div>
+  );
+}
+
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  // This should fetch user data when userId changes
+  
+  return (
+    <div>
+      {loading ? (
+        <p>Loading user...</p>
+      ) : (
+        <div>
+          <h3>User Profile</h3>
+          <p>Name: {user?.name}</p>
+          <p>Email: {user?.email}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function App() {
+  const [showTimer, setShowTimer] = useState(true);
+  const [selectedUserId, setSelectedUserId] = useState(1);
+  
+  return (
+    <div>
+      <h1>Lifecycle Demo</h1>
+      
+      <div>
+        <button onClick={() => setShowTimer(!showTimer)}>
+          {showTimer ? 'Hide Timer' : 'Show Timer'}
+        </button>
+        {showTimer && <Timer />}
+      </div>
+      
+      <div>
+        <h2>User Profiles</h2>
+        <button onClick={() => setSelectedUserId(1)}>User 1</button>
+        <button onClick={() => setSelectedUserId(2)}>User 2</button>
+        <button onClick={() => setSelectedUserId(3)}>User 3</button>
+        <UserProfile userId={selectedUserId} />
+      </div>
+    </div>
+  );
+}`
+        },
+        solutionFiles: {
+          'App.tsx': `import { useState, useEffect } from 'react';
+
+// Component demonstrating mounting and unmounting lifecycle
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+  
+  // Effect for mounting and unmounting
+  useEffect(() => {
+    console.log('⚡ Timer component mounted!');
+    
+    const interval = setInterval(() => {
+      setSeconds(prev => prev + 1);
+    }, 1000);
+    
+    // Cleanup function - runs when component unmounts
+    return () => {
+      console.log('🧹 Timer component unmounting - cleaning up interval');
+      clearInterval(interval);
+    };
+  }, []); // Empty dependency array = runs once on mount
+  
+  // Effect that runs on every update (be careful with this!)
+  useEffect(() => {
+    console.log(\`🔄 Timer updated: \${seconds} seconds\`);
+  }); // No dependency array = runs on every render
+  
+  // Effect that runs when seconds changes
+  useEffect(() => {
+    if (seconds > 0 && seconds % 5 === 0) {
+      console.log(\`🎉 5-second milestone reached: \${seconds} seconds!\`);
+    }
+  }, [seconds]); // Runs when seconds changes
+  
+  return (
+    <div style={{ border: '2px solid #3b82f6', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+      <h3>⏱️ Timer Component</h3>
+      <p style={{ fontSize: '18px', fontWeight: 'bold' }}>Time: {seconds} seconds</p>
+      {seconds >= 10 && (
+        <p style={{ color: '#22c55e', fontWeight: 'bold' }}>
+          🚀 Timer has been running for {seconds} seconds!
+        </p>
+      )}
+    </div>
+  );
+}
+
+// Component demonstrating data fetching and updates
+function UserProfile({ userId }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Effect for fetching user data when userId changes
+  useEffect(() => {
+    console.log(\`👤 Fetching user data for ID: \${userId}\`);
+    
+    setLoading(true);
+    setError(null);
+    
+    // Simulate API call
+    const fetchUser = async () => {
+      try {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock user data
+        const mockUsers = {
+          1: { name: 'Alice Johnson', email: 'alice@example.com', role: 'Developer' },
+          2: { name: 'Bob Smith', email: 'bob@example.com', role: 'Designer' },
+          3: { name: 'Charlie Brown', email: 'charlie@example.com', role: 'Manager' }
+        };
+        
+        const userData = mockUsers[userId];
+        
+        if (userData) {
+          setUser(userData);
+        } else {
+          throw new Error('User not found');
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchUser();
+    
+    // Cleanup function for any pending requests
+    return () => {
+      console.log(\`🧹 Cleaning up user fetch for ID: \${userId}\`);
+    };
+  }, [userId]); // Re-run effect when userId changes
+  
+  // Effect that runs when user data is loaded
+  useEffect(() => {
+    if (user) {
+      console.log(\`✅ User data loaded for: \${user.name}\`);
+      document.title = \`Profile: \${user.name}\`;
+    }
+    
+    // Cleanup document title when component unmounts
+    return () => {
+      document.title = 'React Learning App';
+    };
+  }, [user]);
+  
+  if (loading) {
+    return (
+      <div style={{ border: '2px solid #f59e0b', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+        <p>🔄 Loading user data...</p>
+        <div style={{ width: '100%', height: '4px', backgroundColor: '#fef3c7', borderRadius: '2px' }}>
+          <div 
+            style={{ 
+              width: '50%', 
+              height: '100%', 
+              backgroundColor: '#f59e0b', 
+              borderRadius: '2px',
+              animation: 'pulse 1s infinite'
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div style={{ border: '2px solid #ef4444', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+        <h3>❌ Error</h3>
+        <p style={{ color: '#dc2626' }}>{error}</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div style={{ border: '2px solid #22c55e', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+      <h3>👤 User Profile (ID: {userId})</h3>
+      <div style={{ backgroundColor: '#f0fdf4', padding: '10px', borderRadius: '4px' }}>
+        <p><strong>Name:</strong> {user?.name}</p>
+        <p><strong>Email:</strong> {user?.email}</p>
+        <p><strong>Role:</strong> {user?.role}</p>
+      </div>
+    </div>
+  );
+}
+
+// Component demonstrating window event listeners
+function WindowSize() {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+  
+  useEffect(() => {
+    console.log('📏 WindowSize component mounted - adding resize listener');
+    
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup - remove event listener
+    return () => {
+      console.log('🧹 WindowSize component unmounting - removing resize listener');
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+  return (
+    <div style={{ border: '2px solid #8b5cf6', padding: '15px', margin: '10px', borderRadius: '8px' }}>
+      <h3>📏 Window Size</h3>
+      <p>Width: {windowSize.width}px</p>
+      <p>Height: {windowSize.height}px</p>
+      <small style={{ color: '#6b7280' }}>Try resizing your browser window!</small>
+    </div>
+  );
+}
+
+export default function App() {
+  const [showTimer, setShowTimer] = useState(true);
+  const [showWindowSize, setShowWindowSize] = useState(true);
+  const [selectedUserId, setSelectedUserId] = useState(1);
+  
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1>🔄 Component Lifecycle Demo</h1>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <h2>Timer Component (Mount/Unmount)</h2>
+        <button 
+          onClick={() => setShowTimer(!showTimer)}
+          style={{ padding: '8px 16px', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          {showTimer ? 'Hide Timer' : 'Show Timer'}
+        </button>
+        {showTimer && <Timer />}
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <h2>User Profile (Data Fetching on Update)</h2>
+        <div>
+          {[1, 2, 3].map(id => (
+            <button 
+              key={id}
+              onClick={() => setSelectedUserId(id)}
+              style={{ 
+                marginRight: '10px', 
+                padding: '8px 16px', 
+                backgroundColor: selectedUserId === id ? '#22c55e' : '#6b7280',
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '4px' 
+              }}
+            >
+              User {id}
+            </button>
+          ))}
+        </div>
+        <UserProfile userId={selectedUserId} />
+      </div>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <h2>Window Size (Event Listeners)</h2>
+        <button 
+          onClick={() => setShowWindowSize(!showWindowSize)}
+          style={{ padding: '8px 16px', backgroundColor: '#8b5cf6', color: 'white', border: 'none', borderRadius: '4px' }}
+        >
+          {showWindowSize ? 'Hide Window Size' : 'Show Window Size'}
+        </button>
+        {showWindowSize && <WindowSize />}
+      </div>
+      
+      <div style={{ backgroundColor: '#f3f4f6', padding: '15px', borderRadius: '8px' }}>
+        <h3>🧠 Lifecycle Patterns:</h3>
+        <ul style={{ fontSize: '14px' }}>
+          <li><strong>Mount:</strong> useEffect with empty dependency array []</li>
+          <li><strong>Update:</strong> useEffect with specific dependencies [value]</li>
+          <li><strong>Unmount:</strong> return cleanup function from useEffect</li>
+          <li><strong>Every render:</strong> useEffect with no dependency array</li>
+        </ul>
+        <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '10px' }}>
+          Check your browser console to see lifecycle logs!
+        </p>
+      </div>
+    </div>
+  );
+}`
+        },
+        task: 'Implement proper lifecycle patterns for timer, data fetching, and cleanup.',
+        hints: [
+          {
+            id: 'lifecycle-hint-1',
+            text: 'Use useEffect with empty dependency array [] for mounting effects',
+            order: 1
+          },
+          {
+            id: 'lifecycle-hint-2',
+            text: 'Return cleanup functions from useEffect for proper unmounting',
+            order: 2
+          },
+          {
+            id: 'lifecycle-hint-3',
+            text: 'Use dependency arrays to control when effects run on updates',
+            order: 3
+          }
+        ],
+        quiz: {
+          id: 'lifecycle-quiz-1',
+          question: 'When does a useEffect cleanup function run?',
+          type: 'multiple-choice',
+          options: [
+            'When the component first mounts',
+            'When the component unmounts or before the effect runs again',
+            'On every state update',
+            'Only when there\'s an error'
+          ],
+          correctAnswer: 1,
+          explanation: 'The cleanup function returned by useEffect runs when the component unmounts or before the effect runs again (if dependencies change). This prevents memory leaks and cleans up subscriptions.'
+        },
+        achievementIds: ['lifecycle-master']
+      }
+    ]
   }
 ];
+        },
+        task: 'Convert the useState-based counter to use useReducer for managing both count and step values.',
+        hints: [
+          {
+            id: 'reducer-hint-1',
+            text: 'Define action types: INCREMENT, DECREMENT, RESET, SET_STEP',
+            order: 1
+          },
+          {
+            id: 'reducer-hint-2',
+            text: 'Create a reducer function that handles all these action types',
+            order: 2
+          },
+          {
+            id: 'reducer-hint-3',
+            text: 'Use dispatch({ type: "ACTION_NAME" }) to trigger state updates',
+            order: 3
+          }
+        ],
+        quiz: {
+          id: 'reducer-quiz-1',
+          question: 'When should you use useReducer instead of useState?',
+          type: 'multiple-choice',
+          options: [
+            'When you have simple boolean state',
+            'When you have complex state with multiple sub-values',
+            'When you need to store strings',
+            'When you want to make HTTP requests'
+          ],
+          correctAnswer: 1,
+          explanation: 'useReducer is ideal for complex state logic with multiple sub-values or when the next state depends on the previous one. It provides more predictable state updates through a reducer function.'
+        },
+        achievementIds: ['reducer-master']
+      }
+    ]

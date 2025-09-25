@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Book, CheckCircle, RotateCcw, ChevronDown, ChevronRight, Sun, Moon, X } from 'lucide-react';
+import { Book, CheckCircle, RotateCcw, ChevronDown, ChevronRight, Sun, Moon, X, User } from 'lucide-react';
 import { Lesson, Progress } from '../types';
+import { useAuth } from '../hooks/useAuth';
+import AuthModal from './AuthModal';
+import UserProfile from './UserProfile';
 
 interface SidebarProps {
   lessons: Lesson[];
@@ -34,6 +37,8 @@ export default function Sidebar({
   isOpen
 }: SidebarProps) {
   const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set([currentLessonId]));
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const toggleLesson = (lessonId: string) => {
     const newExpanded = new Set(expandedLessons);
@@ -73,6 +78,19 @@ export default function Sidebar({
                 <Sun className="w-4 h-4 text-gray-600 dark:text-gray-400" />
               )}
             </button>
+            
+            {isAuthenticated ? (
+              <UserProfile theme={theme} />
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
+                title="Sign in to save progress"
+              >
+                <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              </button>
+            )}
+            
             <button
               onClick={onToggleSidebar}
               className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
@@ -93,6 +111,17 @@ export default function Sidebar({
               style={{ width: `${totalProgress}%` }}
             ></div>
           </div>
+          {!isAuthenticated && (
+            <div className="mt-3 text-xs text-gray-600 dark:text-gray-400">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Sign in
+              </button>
+              {' '}to save progress across devices
+            </div>
+          )}
         </div>
       </div>
 
@@ -184,6 +213,12 @@ export default function Sidebar({
           <span>Reset Progress</span>
         </button>
       </div>
+      
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        theme={theme}
+      />
     </div>
   );
 }
