@@ -10,6 +10,10 @@ const createMockSupabaseClient = () => ({
       console.log('🔄 Using mock auth - localStorage fallback');
       return Promise.resolve({ data: { session: null } });
     },
+    getUser: () => {
+      console.log('🔄 Using mock getUser - localStorage fallback');
+      return Promise.resolve({ data: { user: null }, error: null });
+    },
     onAuthStateChange: () => {
       console.log('🔄 Using mock auth state changes');
       return { data: { subscription: { unsubscribe: () => {} } } };
