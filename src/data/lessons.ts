@@ -360,4 +360,4 @@ export default function App() {
         id: 'state-basics',
         title: 'Component State',
         description: 'Manage changing data in components',
-        explanation: 'State is like a component\'s memory! While props are data passed from outside (like ingredients), state is data that the component manages internally (like keeping track of how many cookies you\'ve baked). Think of state as variables that can change over time an
+        explanation: 'State is like a component\'s memory! While props are data passed from outside (like ingredients), state is data that the component manages internally (like keeping track of how many cookies you\'ve baked). Think of state as variables that can change over time and trigger re-renders of your component when they do. This allows your components to be interactive and respond to user actions or data changes.',
