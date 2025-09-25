@@ -3,9 +3,17 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check if environment variables are properly configured (not placeholders)
-const isValidSupabaseUrl = supabaseUrl && !supabaseUrl.includes('your-project') && supabaseUrl.startsWith('http');
-const isValidSupabaseKey = supabaseAnonKey && !supabaseAnonKey.includes('your_actual_anon_key_here');
+// Enhanced validation for environment variables
+const isValidSupabaseUrl = supabaseUrl && 
+  !supabaseUrl.includes('your-project') && 
+  !supabaseUrl.includes('your_supabase_url') &&
+  supabaseUrl.startsWith('http') &&
+  supabaseUrl.includes('supabase.co');
+
+const isValidSupabaseKey = supabaseAnonKey && 
+  !supabaseAnonKey.includes('your_actual_anon_key_here') &&
+  !supabaseAnonKey.includes('your_supabase_anon_key') &&
+  supabaseAnonKey.length > 50; // Supabase keys are typically long JWT tokens
 
 // Create a mock client if environment variables are not set
 const createMockSupabaseClient = () => ({
@@ -24,9 +32,37 @@ const createMockSupabaseClient = () => ({
   })
 });
 
-export const supabase = (!isValidSupabaseUrl || !isValidSupabaseKey)
-  ? createMockSupabaseClient()
-  : createClient(supabaseUrl, supabaseAnonKey);
+// Create Supabase client with error handling
+let supabaseClient;
+
+try {
+  if (!isValidSupabaseUrl || !isValidSupabaseKey) {
+    console.warn('🔄 Supabase not configured - using local storage fallback');
+    console.log('Environment check:', {
+      hasUrl: !!supabaseUrl,
+      urlValid: isValidSupabaseUrl,
+      hasKey: !!supabaseAnonKey,
+      keyValid: isValidSupabaseKey,
+      currentUrl: supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'Not set'
+    });
+    supabaseClient = createMockSupabaseClient();
+  } else {
+    console.log('✅ Creating Supabase client with valid credentials');
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+    
+    // Test connection
+    supabaseClient.auth.getSession().catch(error => {
+      console.error('❌ Supabase connection failed:', error.message);
+      console.log('🔄 Falling back to mock client');
+    });
+  }
+} catch (error) {
+  console.error('❌ Failed to create Supabase client:', error);
+  console.log('🔄 Using mock client as fallback');
+  supabaseClient = createMockSupabaseClient();
+}
+
+export const supabase = supabaseClient;
 
 export type Database = {
   public: {
