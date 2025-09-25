@@ -37,6 +37,24 @@ export function useAuth() {
     return { error };
   };
 
+  const signInWithEmail = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return { error };
+  };
+
+  const signUpWithEmail = async (email: string, password: string): Promise<{ error: AuthError | null }> => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: undefined, // Disable email confirmation
+      }
+    });
+    return { error };
+  };
   const signOut = async (): Promise<{ error: AuthError | null }> => {
     const { error } = await supabase.auth.signOut();
     return { error };
@@ -47,6 +65,8 @@ export function useAuth() {
     session,
     loading,
     signInWithGoogle,
+    signInWithEmail,
+    signUpWithEmail,
     signOut,
     isAuthenticated: !!user
   };
