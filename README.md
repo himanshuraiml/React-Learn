@@ -3,7 +3,7 @@
 An **interactive React learning platform** that teaches React fundamentals through lessons, examples, visual component hierarchies, and hands-on coding exercises.  
 
 ![App Screenshot](docs/screenshot.png)  
-*(Replace with your own screenshot path)*  
+
 
 ---
 
