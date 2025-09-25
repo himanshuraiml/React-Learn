@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import LessonContent from './components/LessonContent';
+import SupabaseConnectionChecker from './components/SupabaseConnectionChecker';
 import { lessons, achievements } from './data/lessons';
 import { useProgress } from './hooks/useProgress';
 import { useTheme } from './hooks/useTheme';
@@ -87,6 +88,8 @@ function App() {
           />
         )}
       </main>
+      
+      <SupabaseConnectionChecker />
     </div>
   );
 }
