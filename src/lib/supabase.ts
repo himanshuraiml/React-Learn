@@ -162,7 +162,7 @@ export const supabase = new Proxy({} as any, {
 });
 
 // Export connection status checker
-export const isSupabaseConnected = () => isSupabaseWorking;</anoltAction>
+export const isSupabaseConnected = () => isSupabaseWorking;
 
 export type Database = {
   public: {
