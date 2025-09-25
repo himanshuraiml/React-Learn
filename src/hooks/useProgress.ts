@@ -47,6 +47,15 @@ export function useProgress() {
       setProgress(progressMap);
     } catch (error) {
       console.error('Failed to load progress from Supabase:', error);
+      // Fallback to localStorage on Supabase error
+      const savedProgress = localStorage.getItem('react-course-progress');
+      if (savedProgress) {
+        try {
+          setProgress(JSON.parse(savedProgress));
+        } catch (parseError) {
+          console.error('Failed to parse localStorage progress:', parseError);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -68,6 +77,15 @@ export function useProgress() {
       if (error) throw error;
     } catch (error) {
       console.error('Failed to save progress to Supabase:', error);
+      // Still save to localStorage as fallback
+      const newProgress = {
+        ...progress,
+        [lessonId]: {
+          ...progress[lessonId],
+          [subLessonId]: true
+        }
+      };
+      localStorage.setItem('react-course-progress', JSON.stringify(newProgress));
     }
   };
 

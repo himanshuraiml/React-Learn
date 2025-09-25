@@ -17,7 +17,14 @@ export default function AuthModal({ isOpen, onClose, theme }: AuthModalProps) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState('');
 
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail, error: authError } = useAuth();
+
+  // Show auth hook errors
+  React.useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
