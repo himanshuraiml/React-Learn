@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sandpack } from '@codesandbox/sandpack-react';
+import ErrorFeedback from './ErrorFeedback';
 import { SubLesson } from '../types';
 
 interface SandpackEditorProps {
@@ -20,10 +21,12 @@ export default function SandpackEditor({ subLesson, theme }: SandpackEditorProps
           showLineNumbers: true,
           showInlineErrors: true,
           wrapContent: true,
-          editorHeight: 400,
+          editorHeight: 500,
           layout: 'preview',
           autoReload: true,
           editorWidthPercentage: 50,
+          showConsole: true,
+          showConsoleButton: true
         }}
         customSetup={{
           dependencies: {
@@ -34,7 +37,7 @@ export default function SandpackEditor({ subLesson, theme }: SandpackEditorProps
           }
         }}
         style={{
-          height: '400px',
+          height: '500px',
           width: '100%'
         }}
       />

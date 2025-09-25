@@ -16,6 +16,8 @@ interface SidebarProps {
   onToggleTheme: () => void;
   onToggleSidebar: () => void;
   isOpen: boolean;
+  onToggleSidebar: () => void;
+  isOpen: boolean;
 }
 
 export default function Sidebar({
@@ -30,6 +32,8 @@ export default function Sidebar({
   getTotalProgress,
   theme,
   onToggleTheme,
+  onToggleSidebar,
+  isOpen
   onToggleSidebar,
   isOpen
 }: SidebarProps) {

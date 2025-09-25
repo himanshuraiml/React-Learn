@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import LessonContent from './components/LessonContent';
-import { lessons } from './data/lessons';
+import { lessons, achievements } from './data/lessons';
 import { useProgress } from './hooks/useProgress';
 import { useTheme } from './hooks/useTheme';
+import { useAchievements } from './hooks/useAchievements';
 
 function App() {
   const [currentLessonId, setCurrentLessonId] = useState('components');
@@ -20,6 +21,13 @@ function App() {
   } = useProgress();
   
   const { theme, toggleTheme } = useTheme();
+  
+  const {
+    unlockedAchievements,
+    unlockAchievement,
+    resetAchievements,
+    isAchievementUnlocked
+  } = useAchievements();
 
   const handleSubLessonSelect = (lessonId: string, subLessonId: string) => {
     setCurrentLessonId(lessonId);
@@ -29,6 +37,14 @@ function App() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  
+  const handleAchievementUnlock = (achievementId: string) => {
+    const achievement = achievements.find(a => a.id === achievementId);
+    if (achievement && !isAchievementUnlocked(achievementId)) {
+      unlockAchievement(achievementId);
+    }
+  };
+
   const currentLesson = lessons.find(lesson => lesson.id === currentLessonId);
   const currentSubLesson = currentLesson?.subLessons.find(sub => sub.id === currentSubLessonId);
 
@@ -51,6 +67,8 @@ function App() {
         getTotalProgress={getTotalProgress}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onToggleSidebar={toggleSidebar}
+        isOpen={isSidebarOpen}
       />
         </div>
       </div>
@@ -63,7 +81,9 @@ function App() {
             isCompleted={isSubLessonCompleted(currentLessonId, currentSubLessonId)}
             theme={theme}
             onToggleSidebar={toggleSidebar}
-            isOpen={isSidebarOpen}
+            isSidebarOpen={isSidebarOpen}
+            onAchievementUnlock={handleAchievementUnlock}
+            unlockedAchievements={unlockedAchievements}
           />
         )}
       </main>

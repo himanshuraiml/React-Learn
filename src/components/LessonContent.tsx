@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { RotateCcw, Eye, CheckCircle2, Lightbulb, Target, BookOpen, Menu } from 'lucide-react';
 import SandpackEditor from './SandpackEditor';
+import HintSystem from './HintSystem';
+import QuizComponent from './QuizComponent';
+import VisualAidComponent from './VisualAidComponent';
+import AchievementSystem from './AchievementSystem';
 import { SubLesson } from '../types';
 
 interface LessonContentProps {
@@ -10,15 +14,28 @@ interface LessonContentProps {
   theme: 'light' | 'dark';
   onToggleSidebar: () => void;
   isSidebarOpen: boolean;
+  onAchievementUnlock: (achievementId: string) => void;
+  unlockedAchievements: string[];
 }
 
-export default function LessonContent({ subLesson, onComplete, isCompleted, theme, onToggleSidebar, isSidebarOpen }: LessonContentProps) {
+export default function LessonContent({ 
+  subLesson, 
+  onComplete, 
+  isCompleted, 
+  theme, 
+  onToggleSidebar, 
+  isSidebarOpen,
+  onAchievementUnlock,
+  unlockedAchievements 
+}: LessonContentProps) {
   const [currentFiles, setCurrentFiles] = useState(subLesson.files);
   const [showSolution, setShowSolution] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const handleReset = () => {
     setCurrentFiles(subLesson.files);
     setShowSolution(false);
+    setQuizCompleted(false);
   };
 
   const handleShowSolution = () => {
@@ -26,8 +43,27 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
     setShowSolution(true);
   };
 
+  const handleQuizComplete = (correct: boolean) => {
+    setQuizCompleted(true);
+    if (correct && subLesson.achievementIds) {
+      subLesson.achievementIds.forEach(id => onAchievementUnlock(id));
+    }
+  };
+
+  const handleLessonComplete = () => {
+    onComplete();
+    if (subLesson.achievementIds) {
+      subLesson.achievementIds.forEach(id => onAchievementUnlock(id));
+    }
+  };
   return (
     <div className="flex-1 flex flex-col">
+      <AchievementSystem
+        achievements={[]} // This will be passed from parent with all achievements
+        unlockedAchievements={unlockedAchievements}
+        theme={theme}
+      />
+
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -56,16 +92,9 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
               <RotateCcw className="w-4 h-4" />
               <span>Reset</span>
             </button>
-            <button
-              onClick={handleShowSolution}
-              className="flex items-center space-x-2 px-4 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-lg transition-colors"
-            >
-              <Eye className="w-4 h-4" />
-              <span>Show Solution</span>
-            </button>
             {!isCompleted && (
               <button
-                onClick={onComplete}
+                onClick={handleLessonComplete}
                 className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -79,7 +108,7 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
       {/* Content */}
       <div className="flex-1 flex flex-col">
         {/* Top: Explanation */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Explanation */}
             <div className="lg:col-span-2">
@@ -115,17 +144,20 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
             )}
           </div>
 
-          {showSolution && (
-            <div className="mt-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
-                <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" />
-                <div>
-                  <h3 className="text-lg font-semibold text-green-900 dark:text-green-200 mb-2">💡 Solution Revealed</h3>
-                  <p className="text-green-800 dark:text-green-300 text-sm">The solution is now displayed in the editor. Study the code to understand how it works!</p>
-                </div>
-              </div>
-            </div>
+          {/* Visual Aid */}
+          {subLesson.visualAid && (
+            <VisualAidComponent
+              visualAid={subLesson.visualAid}
+              theme={theme}
+            />
           )}
+
+          {/* Hint System */}
+          <HintSystem
+            hints={subLesson.hints}
+            onShowSolution={handleShowSolution}
+            theme={theme}
+          />
         </div>
 
         {/* Middle: Split Editor and Preview */}
@@ -137,7 +169,7 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
         </div>
 
         {/* Bottom: Challenge */}
-        <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 space-y-6">
           <div className="bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
             <div className="flex items-start space-x-3">
               <Target className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5" />
@@ -147,6 +179,15 @@ export default function LessonContent({ subLesson, onComplete, isCompleted, them
               </div>
             </div>
           </div>
+
+          {/* Quiz */}
+          {subLesson.quiz && (
+            <QuizComponent
+              quiz={subLesson.quiz}
+              onComplete={handleQuizComplete}
+              theme={theme}
+            />
+          )}
         </div>
       </div>
     </div>
