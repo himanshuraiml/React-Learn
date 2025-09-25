@@ -32,8 +32,6 @@ export default function Sidebar({
   onToggleTheme,
   onToggleSidebar,
   isOpen
-  onToggleSidebar,
-  isOpen
 }: SidebarProps) {
   const [expandedLessons, setExpandedLessons] = useState<Set<string>>(new Set([currentLessonId]));
 
