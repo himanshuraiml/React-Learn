@@ -2366,38 +2366,3 @@ export default function App() {
     ]
   }
 ];
-        
-        task: 'Convert the useState-based counter to use useReducer for managing both count and step values.',
-        hints: [
-          {
-            id: 'reducer-hint-1',
-            text: 'Define action types: INCREMENT, DECREMENT, RESET, SET_STEP',
-            order: 1
-          },
-          {
-            id: 'reducer-hint-2',
-            text: 'Create a reducer function that handles all these action types',
-            order: 2
-          },
-          {
-            id: 'reducer-hint-3',
-            text: 'Use dispatch({ type: "ACTION_NAME" }) to trigger state updates',
-            order: 3
-          }
-        ],
-        quiz: {
-          id: 'reducer-quiz-1',
-          question: 'When should you use useReducer instead of useState?',
-          type: 'multiple-choice',
-          options: [
-            'When you have simple boolean state',
-            'When you have complex state with multiple sub-values',
-            'When you need to store strings',
-            'When you want to make HTTP requests'
-          ],
-          correctAnswer: 1,
-          explanation: 'useReducer is ideal for complex state logic with multiple sub-values or when the next state depends on the previous one. It provides more predictable state updates through a reducer function.'
-        },
-        achievementIds: ['reducer-master']
-      }
-    ]
