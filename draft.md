@@ -1,31 +1,39 @@
 ---
-title: Your ACM Proceeding Title
+title: Your Springer LNCS Paper
 author:
-  - name: Author Name
-    email: author@acm.org
-    affiliation: Research University
+  - name: First Author
+    institute: University One
+  - name: Second Author
+    institute: Institute Two
 abstract: |
-  An abstract for ACM format exploring key contributions.
-format: acm
-keywords: [machine learning, systems, HCI]
+  Springer LNCS abstract (max 150 words).
+format: springer
 ---
 
+# Time series analysis of Second
+            
+
 # Introduction
-ACM uses alphabetic citations [@author2024].
+State the problem and your contribution.
 
 # Related Work
-Situate your work within existing literature.
+Survey the relevant prior art.
 
-# Approach
-Describe your methodology with equations as needed:
+# Methodology
+
+## Formal Model
+Define your formal model:
 $$
-\mathcal{L} = \sum_{i=1}^{n} \ell(y_i, \hat{y}_i)
+f(x) = \int_0^\infty g(t)\, dt
 $$
+
+# Implementation
+Describe the implementation.
 
 # Evaluation
-Report metrics in tables.
+Present results and analysis.
 
 # Conclusion
-Summarize and discuss future work.
+Summarize findings and future work.
 
 # References
