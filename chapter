@@ -35,5 +35,12 @@ Present results and analysis.
 
 # Conclusion
 Summarize findings and future work.
+```c
+# Include <stdio.h>
+
+int main()
+      {
+
+```
 
 # References
