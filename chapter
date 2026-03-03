@@ -1,0 +1,39 @@
+---
+title: Your Springer LNCS Paper
+author:
+  - name: First Author
+    institute: University One
+  - name: Second Author
+    institute: Institute Two
+abstract: |
+  Springer LNCS abstract (max 150 words).
+format: springer
+---
+
+# Time series analysis of Second
+            
+
+# Introduction
+State the problem and your contribution.
+
+# Related Work
+Survey the relevant prior art.
+
+# Methodology
+
+## Formal Model
+Define your formal model:
+$$
+f(x) = \int_0^\infty g(t)\, dt
+$$
+
+# Implementation
+Describe the implementation.
+
+# Evaluation
+Present results and analysis.
+
+# Conclusion
+Summarize findings and future work.
+
+# References
