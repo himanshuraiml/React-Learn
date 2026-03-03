@@ -1,0 +1,62 @@
+name: Pandoc Export
+on:
+  workflow_dispatch:
+    inputs:
+      filename:
+        description: 'The markdown file to convert'
+        required: true
+        default: 'draft.md'
+      template:
+        description: 'The template to use (ieee, nature, arxiv)'
+        required: true
+        default: 'ieee'
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Generate PDF
+        run: |
+          case "${{ github.event.inputs.template }}" in
+            ieee)
+              ARGS="-V documentclass=IEEEtran -V classoption=conference"
+              ;;
+            acm)
+              ARGS="-V documentclass=acmart"
+              ;;
+            neurips)
+              ARGS="-V documentclass=article -V geometry=margin=1in"
+              ;;
+            springer)
+              ARGS="-V documentclass=llncs"
+              ;;
+            *)
+              ARGS=""
+              ;;
+          esac
+
+          # Alignment pre-processing
+          sed -i 's/<center>/\\begin{center}/g' "${{ github.event.inputs.filename }}"
+          sed -i 's/<\\/center>/\\end{center}/g' "${{ github.event.inputs.filename }}"
+          sed -i 's/<div align="right">/\\begin{flushright}/g' "${{ github.event.inputs.filename }}"
+          sed -i 's/<\\/div>/\\end{flushright}/g' "${{ github.event.inputs.filename }}"
+
+          docker run --rm -v $(pwd):/data pandoc/latex:latest "/data/${{ github.event.inputs.filename }}" -o "/data/output.pdf" $ARGS --pdf-engine=pdflatex
+
+      - name: Commit and Push PDF
+        run: |
+          git config --global user.name "GitWrite AI"
+          git config --global user.email "actions@github.com"
+          TARGET_NAME="${{ github.event.inputs.filename }}"
+          TARGET_NAME="${TARGET_NAME%.*}.pdf"
+          mv output.pdf "$TARGET_NAME"
+          git add "$TARGET_NAME"
+          git commit -m "Generated PDF: $TARGET_NAME [skip ci]" || echo "No changes to commit"
+          git push
